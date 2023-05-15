@@ -28,3 +28,23 @@ func (m *UsersModel) Register(phoneNumber, password, name, gender, tanggalLahir 
 
 	return nil
 }
+
+func (m *UsersModel) Login(phoneNumber, password string) error {
+	var id int
+	var hashedPassword string
+
+	row := m.DB.QueryRow("SELECT id, password FROM users WHERE phone_number = ?", phoneNumber)
+	err := row.Scan(&id, &hashedPassword)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return errors.New("phone number not found")
+		}
+		return err
+	}
+
+	if password != hashedPassword {
+		return errors.New("incorrect password")
+	}
+
+	return nil
+}
