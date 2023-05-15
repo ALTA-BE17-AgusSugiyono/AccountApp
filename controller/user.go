@@ -41,3 +41,25 @@ func Register() {
 
 	fmt.Println("User registered successfully!")
 }
+
+func Login() bool {
+	var phoneNumber, password string
+
+	fmt.Print("Phone number: ")
+	fmt.Scanln(&phoneNumber)
+
+	fmt.Print("Password: ")
+	fmt.Scanln(&password)
+
+	// buat instance dari UsersModel dan inisialisasi dengan DB yang telah diinisialisasi pada config.Init()
+	userModel := &users.UsersModel{DB: config.DB}
+
+	err := userModel.Login(phoneNumber, password)
+	if err != nil {
+		fmt.Println("Failed to login:", err)
+		return false
+	}
+
+	fmt.Println("Login successful!")
+	return true
+}

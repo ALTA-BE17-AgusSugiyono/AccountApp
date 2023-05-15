@@ -46,9 +46,10 @@ func main() {
 				fmt.Println("Register Menu")
 				controller.Register()
 			case 2:
-
+				fmt.Println("Login feature")
+				isLoggedIn = controller.Login()
 			case 0:
-				fmt.Println("Exiting program...")
+				fmt.Println("Kamu Keluar Dari Program...")
 				return
 			default:
 				fmt.Println("Invalid input. Please input a valid option.")
