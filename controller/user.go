@@ -42,7 +42,7 @@ func Register() {
 	fmt.Println("User registered successfully!")
 }
 
-func Login() bool {
+func Login() (bool, int, string) {
 	var phoneNumber, password string
 
 	fmt.Print("Phone number: ")
@@ -51,15 +51,34 @@ func Login() bool {
 	fmt.Print("Password: ")
 	fmt.Scanln(&password)
 
-	// buat instance dari UsersModel dan inisialisasi dengan DB yang telah diinisialisasi pada config.Init()
 	userModel := &users.UsersModel{DB: config.DB}
-
-	err := userModel.Login(phoneNumber, password)
+	userID, err := userModel.Login(phoneNumber, password)
 	if err != nil {
 		fmt.Println("Failed to login:", err)
-		return false
+		return false, 0, "" // Mengembalikan nomor telepon sebagai string kosong ("")
 	}
 
 	fmt.Println("Login successful!")
-	return true
+	return true, userID, phoneNumber // Mengembalikan nomor telepon yang berhasil login
+}
+
+func ViewProfile(phoneNumber string, loggedInUserID int) {
+	userModel := &users.UsersModel{DB: config.DB}
+	user, err := userModel.GetUserByPhoneNumber(phoneNumber)
+	if err != nil {
+		fmt.Println("Failed to get user:", err)
+		return
+	}
+
+	if user.ID != loggedInUserID {
+		fmt.Println("Error: You can only view your own profile.")
+		return
+	}
+
+	fmt.Println("Profile:")
+	fmt.Println("Phone number:", user.PhoneNumber)
+	fmt.Println("Name:", user.Name)
+	fmt.Println("Gender:", user.Gender)
+	fmt.Println("Tanggal lahir:", user.TanggalLahir)
+	fmt.Println("Balance:", user.Balance)
 }
