@@ -62,7 +62,8 @@ func main() {
 				fmt.Println("View Profile Menu")
 				controller.ViewProfile(loggedInUserPhoneNumber, loggedInUserID)
 			case 4:
-
+				fmt.Println("Update Profile Menu")
+				controller.UpdateAccount(loggedInUserPhoneNumber, loggedInUserID)
 			case 5:
 
 			case 6:

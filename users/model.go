@@ -63,3 +63,12 @@ func (m *UsersModel) GetUserByPhoneNumber(phoneNumber string) (*Users, error) {
 
 	return user, nil
 }
+
+func (m *UsersModel) UpdateAccount(userID int, name, gender, tanggalLahir string) error {
+	_, err := m.DB.Exec("UPDATE users SET name=?, gender=?, tanggal_lahir=? WHERE id=?", name, gender, tanggalLahir, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
