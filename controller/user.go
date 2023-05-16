@@ -7,6 +7,7 @@ import (
 	"strings"
 )
 
+// Contoller Register
 func Register() {
 	var phoneNumber, password, name, gender, tanggalLahir string
 
@@ -42,6 +43,7 @@ func Register() {
 	fmt.Println("User registered successfully!")
 }
 
+// Controller Login
 func Login() (bool, int, string) {
 	var phoneNumber, password string
 
@@ -62,6 +64,7 @@ func Login() (bool, int, string) {
 	return true, userID, phoneNumber // Mengembalikan nomor telepon yang berhasil login
 }
 
+// Controller Read Account
 func ViewProfile(phoneNumber string, loggedInUserID int) {
 	userModel := &users.UsersModel{DB: config.DB}
 	user, err := userModel.GetUserByPhoneNumber(phoneNumber)
@@ -81,4 +84,32 @@ func ViewProfile(phoneNumber string, loggedInUserID int) {
 	fmt.Println("Gender:", user.Gender)
 	fmt.Println("Tanggal lahir:", user.TanggalLahir)
 	fmt.Println("Balance:", user.Balance)
+}
+
+// Controller Update Account
+func UpdateAccount(phoneNumber string, userID int) {
+	var name, gender, tanggalLahir string
+
+	fmt.Print("New Name: ")
+	fmt.Scanln(&name)
+
+	fmt.Print("New Gender (M/F): ")
+	fmt.Scanln(&gender)
+	gender = strings.ToUpper(gender)
+	if gender != "M" && gender != "F" {
+		fmt.Println("Invalid gender")
+		return
+	}
+
+	fmt.Print("New Tanggal lahir (YYYY-MM-DD): ")
+	fmt.Scanln(&tanggalLahir)
+
+	userModel := &users.UsersModel{DB: config.DB}
+	err := userModel.UpdateAccount(userID, name, gender, tanggalLahir)
+	if err != nil {
+		fmt.Println("Failed to update profile:", err)
+		return
+	}
+
+	fmt.Println("Profile updated successfully!")
 }
