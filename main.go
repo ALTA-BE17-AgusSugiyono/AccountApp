@@ -65,7 +65,8 @@ func main() {
 				fmt.Println("Update Profile Menu")
 				controller.UpdateAccount(loggedInUserPhoneNumber, loggedInUserID)
 			case 5:
-
+				fmt.Println("Delete Account Menu")
+				controller.DeleteAccount(loggedInUserPhoneNumber, loggedInUserID)
 			case 6:
 
 			case 7:
