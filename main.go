@@ -68,7 +68,8 @@ func main() {
 				fmt.Println("Delete Account Menu")
 				controller.DeleteAccount(loggedInUserPhoneNumber, loggedInUserID)
 			case 6:
-
+				fmt.Println("Top-up Menu")
+				controller.TopUp(loggedInUserID)
 			case 7:
 
 			case 8:
