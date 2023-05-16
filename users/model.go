@@ -32,14 +32,19 @@ func (m *UsersModel) Register(phoneNumber, password, name, gender, tanggalLahir 
 func (m *UsersModel) Login(phoneNumber, password string) (int, error) {
 	var id int
 	var hashedPassword string
+	var deletedAt interface{}
 
-	row := m.DB.QueryRow("SELECT id, password FROM users WHERE phone_number = ?", phoneNumber)
-	err := row.Scan(&id, &hashedPassword)
+	row := m.DB.QueryRow("SELECT id, password, deleted_at FROM users WHERE phone_number = ?", phoneNumber)
+	err := row.Scan(&id, &hashedPassword, &deletedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
 			return 0, errors.New("phone number not found")
 		}
 		return 0, err
+	}
+
+	if deletedAt != nil {
+		return 0, errors.New("user account has been deleted")
 	}
 
 	if password != hashedPassword {
@@ -65,7 +70,17 @@ func (m *UsersModel) GetUserByPhoneNumber(phoneNumber string) (*Users, error) {
 }
 
 func (m *UsersModel) UpdateAccount(userID int, name, gender, tanggalLahir string) error {
-	_, err := m.DB.Exec("UPDATE users SET name=?, gender=?, tanggal_lahir=? WHERE id=?", name, gender, tanggalLahir, userID)
+
+	_, err := m.DB.Exec("UPDATE users SET name=?, gender=?, tanggal_lahir=?, updated_at=NOW() WHERE id=?", name, gender, tanggalLahir, userID)
+	if err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (m *UsersModel) DeleteAccount(userID int) error {
+	_, err := m.DB.Exec("UPDATE users SET deleted_at=NOW() WHERE id=?", userID)
 	if err != nil {
 		return err
 	}

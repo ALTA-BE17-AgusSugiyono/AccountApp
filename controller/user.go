@@ -113,3 +113,15 @@ func UpdateAccount(phoneNumber string, userID int) {
 
 	fmt.Println("Profile updated successfully!")
 }
+
+// Controller Delete Account
+func DeleteAccount(phoneNumber string, userID int) {
+	userModel := &users.UsersModel{DB: config.DB}
+	err := userModel.DeleteAccount(userID)
+	if err != nil {
+		fmt.Println("Failed to delete account:", err)
+		return
+	}
+
+	fmt.Println("Account deleted successfully!")
+}
