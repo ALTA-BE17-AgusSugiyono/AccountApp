@@ -4,7 +4,7 @@ import "time"
 
 type Topup struct {
 	ID      int
-	User_ID int
+	UserID  int
 	Amount  int
 	Tanggal time.Time
 }
