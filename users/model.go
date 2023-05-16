@@ -29,7 +29,7 @@ func (m *UsersModel) Register(phoneNumber, password, name, gender, tanggalLahir 
 	return nil
 }
 
-func (m *UsersModel) Login(phoneNumber, password string) error {
+func (m *UsersModel) Login(phoneNumber, password string) (int, error) {
 	var id int
 	var hashedPassword string
 
@@ -37,14 +37,29 @@ func (m *UsersModel) Login(phoneNumber, password string) error {
 	err := row.Scan(&id, &hashedPassword)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return errors.New("phone number not found")
+			return 0, errors.New("phone number not found")
 		}
-		return err
+		return 0, err
 	}
 
 	if password != hashedPassword {
-		return errors.New("incorrect password")
+		return 0, errors.New("incorrect password")
 	}
 
-	return nil
+	return id, nil
+}
+
+func (m *UsersModel) GetUserByPhoneNumber(phoneNumber string) (*Users, error) {
+	user := &Users{}
+
+	row := m.DB.QueryRow("SELECT id, phone_number, name, gender, tanggal_lahir, balance FROM users WHERE phone_number = ?", phoneNumber)
+	err := row.Scan(&user.ID, &user.PhoneNumber, &user.Name, &user.Gender, &user.TanggalLahir, &user.Balance)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.New("phone number not found")
+		}
+		return nil, err
+	}
+
+	return user, nil
 }

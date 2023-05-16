@@ -17,6 +17,8 @@ func main() {
 	// fmt.Println("Successfully connected to database!")
 	var input int
 	var isLoggedIn bool
+	var loggedInUserID int
+	var loggedInUserPhoneNumber string
 
 	for {
 		if !isLoggedIn {
@@ -46,8 +48,8 @@ func main() {
 				fmt.Println("Register Menu")
 				controller.Register()
 			case 2:
-				fmt.Println("Login feature")
-				isLoggedIn = controller.Login()
+				fmt.Println("Login Menu")
+				isLoggedIn, loggedInUserID, loggedInUserPhoneNumber = controller.Login()
 			case 0:
 				fmt.Println("Kamu Keluar Dari Program...")
 				return
@@ -57,7 +59,8 @@ func main() {
 		} else {
 			switch input {
 			case 3:
-
+				fmt.Println("View Profile Menu")
+				controller.ViewProfile(loggedInUserPhoneNumber, loggedInUserID)
 			case 4:
 
 			case 5:
@@ -75,6 +78,8 @@ func main() {
 			case 0:
 				fmt.Println("Logging out...")
 				isLoggedIn = false
+				loggedInUserPhoneNumber = ""
+				loggedInUserID = 0
 			default:
 				fmt.Println("Invalid input. Please input a valid option.")
 			}
