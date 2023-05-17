@@ -87,3 +87,18 @@ func (m *UsersModel) DeleteAccount(userID int) error {
 
 	return nil
 }
+
+func (m *UsersModel) GetUserByID(userID int) (*Users, error) {
+	user := &Users{}
+
+	row := m.DB.QueryRow("SELECT id, phone_number, name, gender, tanggal_lahir, balance FROM users WHERE id = ?", userID)
+	err := row.Scan(&user.ID, &user.PhoneNumber, &user.Name, &user.Gender, &user.TanggalLahir, &user.Balance)
+	if err != nil {
+		if errors.Is(err, sql.ErrNoRows) {
+			return nil, errors.New("user not found")
+		}
+		return nil, err
+	}
+
+	return user, nil
+}
