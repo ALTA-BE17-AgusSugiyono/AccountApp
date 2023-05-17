@@ -3,8 +3,14 @@ package topup
 import (
 	"database/sql"
 	"errors"
+	"time"
+
+	"github.com/jmoiron/sqlx"
 )
 
+type TopUpModel struct {
+	DB *sqlx.DB
+}
 type TopupModel struct {
 	DB *sql.DB
 }
@@ -33,4 +39,29 @@ func (tm *TopupModel) TopUpAccount(phoneNumber string, amount int) error {
 	}
 
 	return nil
+}
+
+func (tm *TopupModel) GetTopUpHistory(userID int) ([]Topup, error) {
+	rows, err := tm.DB.Query("SELECT id, user_id, amount, tanggal FROM topup WHERE user_id = ?", userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	history := []Topup{}
+	for rows.Next() {
+		var t Topup
+		var tanggalString string
+		err := rows.Scan(&t.ID, &t.UserID, &t.Amount, &tanggalString)
+		if err != nil {
+			return nil, err
+		}
+		t.Tanggal, err = time.Parse("2006-01-02 15:04:05", tanggalString)
+		if err != nil {
+			return nil, err
+		}
+		history = append(history, t)
+	}
+
+	return history, nil
 }

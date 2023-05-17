@@ -1,6 +1,8 @@
 package config
 
-import "database/sql"
+import (
+	"database/sql"
+)
 
 var DB *sql.DB
 
