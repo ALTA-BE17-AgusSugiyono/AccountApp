@@ -80,7 +80,8 @@ func main() {
 				fmt.Println("Transfer History Menu")
 				controller.PrintTransferHistory(loggedInUserID)
 			case 10:
-
+				fmt.Println("View other user profile Menu")
+				controller.ViewOtherUserProfile()
 			case 0:
 				fmt.Println("Logging out...")
 				isLoggedIn = false

@@ -127,3 +127,20 @@ func DeleteAccount(phoneNumber string, userID int) {
 }
 
 // Controller ViewOtherUserProfile
+func ViewOtherUserProfile() {
+	fmt.Print("Masukan PhoneNumber ")
+	var phoneNumber string
+	fmt.Scan(&phoneNumber)
+
+	usersModel := users.UsersModel{DB: config.DB}
+	user, err := usersModel.GetUserByPhoneNumber(phoneNumber)
+	if err != nil {
+		fmt.Println("Failed to get user:", err)
+		return
+	}
+
+	fmt.Println("User Profile:")
+	fmt.Println("Name:", user.Name)
+	fmt.Println("Gender:", user.Gender)
+	fmt.Println("Tanggal Lahir:", user.TanggalLahir)
+}
