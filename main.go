@@ -71,7 +71,8 @@ func main() {
 				fmt.Println("Top-up Menu")
 				controller.TopUp(loggedInUserID)
 			case 7:
-
+				fmt.Println("Transfer Menu")
+				controller.TransferAccount(loggedInUserID)
 			case 8:
 
 			case 9:
