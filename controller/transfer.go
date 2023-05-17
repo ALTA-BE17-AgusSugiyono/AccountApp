@@ -50,3 +50,30 @@ func TransferAccount(userID int) {
 
 	fmt.Println("Transfer Successful")
 }
+
+func PrintTransferHistory(userID int) {
+	tm := transfer.TransferModel{DB: config.DB}
+	transferHistory, err := tm.GetTransferHistory(userID)
+	if err != nil {
+		fmt.Println("Failed to retrieve transfer history:", err)
+		return
+	}
+
+	usersModel := users.UsersModel{DB: config.DB}
+	for _, transfer := range transferHistory {
+		sender, err := usersModel.GetUserByID(transfer.Sender_ID)
+		if err != nil {
+			fmt.Println("Failed to get sender user:", err)
+			return
+		}
+
+		receiver, err := usersModel.GetUserByID(transfer.Receiver_ID)
+		if err != nil {
+			fmt.Println("Failed to get receiver user:", err)
+			return
+		}
+
+		fmt.Printf("Transfer ID: %d Sender: %s Receiver: %s Amount: %d Tanggal: %s\n",
+			transfer.ID, sender.Name, receiver.Name, transfer.Amount, transfer.Tanggal.Format("2006-01-02 15:04:05"))
+	}
+}

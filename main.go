@@ -77,7 +77,8 @@ func main() {
 				fmt.Println("Top-up History Menu")
 				controller.PrintTopUpHistory(loggedInUserID)
 			case 9:
-
+				fmt.Println("Transfer History Menu")
+				controller.PrintTransferHistory(loggedInUserID)
 			case 10:
 
 			case 0:

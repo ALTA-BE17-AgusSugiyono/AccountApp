@@ -4,6 +4,7 @@ import (
 	"AccountApp/users"
 	"database/sql"
 	"fmt"
+	"time"
 )
 
 type TransferModel struct {
@@ -53,4 +54,29 @@ func (tm *TransferModel) TransferAccount(SenderPhoneNumber, ReceiverPhoneNumber 
 	}
 
 	return nil
+}
+
+func (tm *TransferModel) GetTransferHistory(userID int) ([]Transfer, error) {
+	rows, err := tm.DB.Query("SELECT id, sender_id, receiver_id, amount, tanggal FROM transfer WHERE sender_id = ? OR receiver_id = ?", userID, userID)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	history := []Transfer{}
+	for rows.Next() {
+		var t Transfer
+		var tanggalString string
+		err := rows.Scan(&t.ID, &t.Sender_ID, &t.Receiver_ID, &t.Amount, &tanggalString)
+		if err != nil {
+			return nil, err
+		}
+		t.Tanggal, err = time.Parse("2006-01-02 15:04:05", tanggalString)
+		if err != nil {
+			return nil, err
+		}
+		history = append(history, t)
+	}
+
+	return history, nil
 }

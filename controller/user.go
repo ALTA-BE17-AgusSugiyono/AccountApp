@@ -125,3 +125,5 @@ func DeleteAccount(phoneNumber string, userID int) {
 
 	fmt.Println("Account deleted successfully!")
 }
+
+// Controller ViewOtherUserProfile
